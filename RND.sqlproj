@@ -69,5 +69,6 @@
     <Build Include="Scripts\StoreProcs.sql" />
     <Build Include="Verify\UpdateDBCENTRY.sql" />
     <Build Include="Scripts\LatestStoreProc.sql" />
+    <Build Include="Scripts\StoreProcFeb7.sql" />
   </ItemGroup>
 </Project>
