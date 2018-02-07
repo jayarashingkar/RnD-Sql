@@ -1,6 +1,6 @@
 ﻿USE [RDB]
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAgeLotID_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAgeLotID_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -20,7 +20,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -71,7 +71,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -148,7 +148,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_ReadByID]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_ReadByID]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -182,7 +182,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Update]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Update]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -219,7 +219,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDBearing_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDBearing_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -288,7 +288,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDCheckUserExists]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDCheckUserExists]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -302,7 +302,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDCompression_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDCompression_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -368,7 +368,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDFatigueTesting_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDFatigueTesting_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -464,7 +464,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDFractureToughness_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDFractureToughness_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -554,7 +554,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGageThickness_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGageThickness_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -575,7 +575,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetAlloyPartTemper]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetAlloyPartTemper]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -594,7 +594,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetHole]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetHole]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -616,7 +616,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetLocation2]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetLocation2]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -639,7 +639,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetLocation2_ByMillLotIdAndWokStudyId]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetLocation2_ByMillLotIdAndWokStudyId]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -662,7 +662,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetPieceNo]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetPieceNo]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -682,7 +682,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetSoNumByProcessID]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetSoNumByProcessID]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -700,7 +700,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetTestTypeFromTesting]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetTestTypeFromTesting]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -717,7 +717,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetUser_ReadByID]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetUser_ReadByID]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -736,7 +736,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetWorkStudyFromTesting]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetWorkStudyFromTesting]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -758,7 +758,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGroupName_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGroupName_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -892,7 +892,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDHole_READByMillLotNo]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDHole_READByMillLotNo]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -917,7 +917,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDHTLogID_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDHTLogID_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -937,7 +937,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLocation_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLocation_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -951,7 +951,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLogin_Delete]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLogin_Delete]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -967,7 +967,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLogin_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLogin_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -999,7 +999,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLogin_ReadByID]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLogin_ReadByID]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1014,7 +1014,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLogin_Update]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLogin_Update]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1032,7 +1032,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLotID_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLotID_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1051,7 +1051,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDMaterial_Delete]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDMaterial_Delete]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1089,7 +1089,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDMillLotNo_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDMillLotNo_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1107,7 +1107,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDModulusCompression_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDModulusCompression_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1170,7 +1170,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDModulusTension_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDModulusTension_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1233,7 +1233,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDNotchYield_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDNotchYield_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1302,7 +1302,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDPcNo_READByMilLotNo]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDPcNo_READByMilLotNo]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1326,7 +1326,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDPrintTesting]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDPrintTesting]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1401,7 +1401,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessing_Delete]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessing_Delete]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1423,7 +1423,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1538,7 +1538,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1609,7 +1609,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_ReadByID]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_ReadByID]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1641,7 +1641,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Update]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Update]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1743,7 +1743,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDRegisteredUser_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDRegisteredUser_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1794,7 +1794,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDRegisteredUser_ReadByID]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDRegisteredUser_ReadByID]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1810,7 +1810,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDReports_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDReports_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1925,7 +1925,7 @@ AS
 	END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDResetPassword]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDResetPassword]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1956,7 +1956,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDResidualStrength_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDResidualStrength_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2034,7 +2034,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDSecurityQuestions_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDSecurityQuestions_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2046,7 +2046,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDSecurityTokens_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDSecurityTokens_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2062,7 +2062,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDShear_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDShear_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2125,7 +2125,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDStudyStatus_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDStudyStatus_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2137,7 +2137,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDStudyType_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDStudyType_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2150,7 +2150,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDSubTestType_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDSubTestType_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2165,7 +2165,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTension_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTension_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2237,7 +2237,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTesting_Delete]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTesting_Delete]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2273,7 +2273,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2340,10 +2340,10 @@ BEGIN
 		VALUES (@TestType,@SubTestType)
 	END
 
-	IF (@Location2 LIKE '%-1%')
-	BEGIN
-		SET @Location2 = ''
-	END
+	--IF (@Location2 LIKE '%-1%')
+	--BEGIN
+	--	SET @Location2 = ''
+	--END
 
 	WHILE @CNT < @ReplicaCount
 	BEGIN
@@ -2372,7 +2372,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2425,7 +2425,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_ReadByTestingNo]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_ReadByTestingNo]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2449,7 +2449,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Update]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Update]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2498,7 +2498,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestType_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestType_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2511,7 +2511,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestTypes_READfromRNDTesting]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestTypes_READfromRNDTesting]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2529,7 +2529,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestWorkStudy_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestWorkStudy_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2546,7 +2546,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUACPartList_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUACPartList_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2650,7 +2650,7 @@ AS
 		END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUACPartListing_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUACPartListing_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2747,7 +2747,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUserPasswordReset]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUserPasswordReset]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2802,7 +2802,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUserPermissionLevel_READ]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUserPermissionLevel_READ]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2826,7 +2826,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUserSecurityAnswers_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUserSecurityAnswers_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2845,7 +2845,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUserSecurityAnswers_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUserSecurityAnswers_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2860,7 +2860,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Delete]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Delete]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2898,7 +2898,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Insert]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Insert]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2952,7 +2952,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Read]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Read]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3046,7 +3046,7 @@ AS
  
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_ReadByID]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_ReadByID]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3065,7 +3065,7 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Update]    Script Date: 2/7/2018 12:26:45 PM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Update]    Script Date: 2/7/2018 1:44:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
