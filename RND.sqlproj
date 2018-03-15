@@ -69,4 +69,7 @@
     <Build Include="Verify\UpdateDBCENTRY.sql" />
     <Build Include="Scripts\StoreProcFeb7.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\StoreProcRelease2.sql" />
+  </ItemGroup>
 </Project>
