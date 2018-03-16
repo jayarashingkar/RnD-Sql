@@ -47,6 +47,10 @@ BEGIN
 	 SELECT @RecId = [RecId]
     FROM [dbo].[RNDStudyType]
     WHERE @@ROWCOUNT > 0 AND [RecId] = scope_identity()
+
+	SELECT t0.[RecId]
+		FROM [dbo].[RNDStudyType] AS t0
+		WHERE @@ROWCOUNT > 0 AND t0.[RecId] = @RecId
 END
 GO
 
@@ -60,7 +64,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE
- [dbo].RNDLocation_Insert
+ [dbo].[RNDLocation_Insert]
     @PlantDesc char(20),
     @PlantState char(2),
     @PlantType tinyint           
@@ -85,6 +89,10 @@ BEGIN
 	 SELECT @RecId = [RecId]
     FROM [dbo].[RNDLocation]
     WHERE @@ROWCOUNT > 0 AND [RecId] = scope_identity()
+
+	SELECT t0.[RecId]
+		FROM [dbo].[RNDLocation] AS t0
+		WHERE @@ROWCOUNT > 0 AND t0.[RecId] = @RecId
 END
 GO
 
