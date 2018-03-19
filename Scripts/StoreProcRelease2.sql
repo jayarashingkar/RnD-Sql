@@ -26,14 +26,15 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE
- [dbo].RNDStudyType_Insert
+ [dbo].[RNDStudyType_Insert]
    @TypeDesc [varchar](30)          
 AS
 BEGIN	
 	DECLARE @MaxTypeStudy int
 	DECLARE @TypeStudy char(2)
 
-	SET @MaxTypeStudy = (SELECT MAX(TypeStudy) FROM [RNDStudyType] AS INT)+1
+	SET @MaxTypeStudy = (SELECT MAX(RecID) FROM [RNDStudyType] AS INT) + 1 
+	
 	SET @TypeStudy = cast(@MaxTypeStudy AS char(2) )
 
 	INSERT INTO [dbo].[RNDStudyType]
@@ -49,8 +50,9 @@ BEGIN
     WHERE @@ROWCOUNT > 0 AND [RecId] = scope_identity()
 
 	SELECT t0.[RecId]
-		FROM [dbo].[RNDStudyType] AS t0
-		WHERE @@ROWCOUNT > 0 AND t0.[RecId] = @RecId
+	FROM [dbo].[RNDStudyType] AS t0
+	WHERE @@ROWCOUNT > 0 AND t0.[RecId] = @RecId
+
 END
 GO
 
@@ -64,7 +66,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE
- [dbo].[RNDLocation_Insert]
+  [dbo].[RNDLocation_Insert]
     @PlantDesc char(20),
     @PlantState char(2),
     @PlantType tinyint           
@@ -72,7 +74,7 @@ AS
 BEGIN	
 	DECLARE @Plant smallint
 	
-	SET @Plant = (SELECT MAX(RecID) FROM [RNDLocation]) 
+	SET @Plant = (SELECT MAX(RecID) FROM [RNDLocation])  + 1 
 
 	INSERT INTO [dbo].[RNDLocation]
            ([Plant]
@@ -94,6 +96,7 @@ BEGIN
 		FROM [dbo].[RNDLocation] AS t0
 		WHERE @@ROWCOUNT > 0 AND t0.[RecId] = @RecId
 END
+
 GO
 
 USE [RDB]
