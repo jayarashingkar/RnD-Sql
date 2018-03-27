@@ -66,10 +66,11 @@
     <Build Include="Scripts\Functions.sql" />
     <Build Include="Scripts\ImportDataStoreProcs.sql" />
     <Build Include="Scripts\ProductionDbStoreProc.sql" />
-    <Build Include="Verify\UpdateDBCENTRY.sql" />
-    <Build Include="Scripts\StoreProcFeb7.sql" />
+    <Build Include="Scripts\StoreProcOld.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\StoreProcRelease2.sql" />
+    <None Include="Scripts\UpdateTestListTable.sql" />
+    <None Include="Scripts\StoreProcsNew.sql" />
   </ItemGroup>
 </Project>
