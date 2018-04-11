@@ -72,5 +72,9 @@
     <None Include="Scripts\StoreProcRelease2.sql" />
     <None Include="Scripts\UpdateTestListTable.sql" />
     <None Include="Scripts\StoreProcsNew.sql" />
+    <None Include="Scripts\Reports SP.sql" />
+    <None Include="Scripts\storeProc Mar 11 - mercury.sql" />
+    <None Include="Scripts\store proc mar 11 testing.sql" />
+    <None Include="Scripts\StoreProc Mar12.sql" />
   </ItemGroup>
 </Project>
