@@ -75,6 +75,9 @@
     <None Include="Scripts\Reports SP.sql" />
     <None Include="Scripts\storeProc Mar 11 - mercury.sql" />
     <None Include="Scripts\store proc mar 11 testing.sql" />
-    <None Include="Scripts\StoreProc Mar12.sql" />
+    <None Include="..\..\RNDSys - set\march 11\StoreProc Mar12.sql">
+      <Link>Scripts\StoreProc Mar12.sql</Link>
+    </None>
+    <None Include="Scripts\TestingMar13.sql" />
   </ItemGroup>
 </Project>
