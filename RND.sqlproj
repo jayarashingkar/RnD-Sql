@@ -59,18 +59,21 @@
     <Folder Include="Properties" />
     <Folder Include="Scripts" />
     <Folder Include="Verify" />
+    <Folder Include="Scripts\May 14 2018" />
+    <Folder Include="Scripts\All Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Scripts\Add New Tables.sql" />
-    <Build Include="Scripts\AlterTables.sql" />
     <Build Include="Scripts\Functions.sql" />
     <Build Include="Scripts\ImportDataStoreProcs.sql" />
     <Build Include="Scripts\ProductionDbStoreProc.sql" />
     <Build Include="Scripts\StoreProcOld.sql" />
+    <Build Include="Scripts\May 14 2018\Add New Tables.sql" />
+    <Build Include="Scripts\May 14 2018\AlterTables.sql" />
+    <Build Include="Scripts\May 14 2018\StoreProcedureAndUserFns.sql" />
+    <None Include="Scripts\May 14 2018\UpdateTestListTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\StoreProcRelease2.sql" />
-    <None Include="Scripts\UpdateTestListTable.sql" />
     <None Include="Scripts\StoreProcsNew.sql" />
     <None Include="Scripts\Reports SP.sql" />
     <None Include="Scripts\storeProc Mar 11 - mercury.sql" />
@@ -78,6 +81,9 @@
     <None Include="..\..\RNDSys - set\march 11\StoreProc Mar12.sql">
       <Link>Scripts\StoreProc Mar12.sql</Link>
     </None>
-    <None Include="Scripts\TestingMar13.sql" />
+    <None Include="Scripts\May 14 2018\Production Database SP.sql" />
+    <None Include="Scripts\May 14 2018\Update Material - DBCntry.sql" />
+    <None Include="Scripts\All Tables\RDB.sql" />
+    <None Include="Scripts\All Tables\Production.sql" />
   </ItemGroup>
 </Project>

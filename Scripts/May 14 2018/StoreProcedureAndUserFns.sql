@@ -1,6 +1,6 @@
 ﻿USE [RDB]
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAgeLotID_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAgeLotID_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21,7 +21,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -73,7 +73,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -151,7 +151,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_ReadByID]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_ReadByID]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -186,7 +186,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Update]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDAssignMaterial_Update]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -224,7 +224,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDBearing_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDBearing_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -294,7 +294,37 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDCheckUserExists]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDCheckTestType_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDCheckTestType_READ]
+ (          @SelectedTests varchar(max)
+			--@Active	 
+)       
+AS
+BEGIN
+
+		IF (@SelectedTests IS NOT NULL)
+		
+		BEGIN
+			DECLARE @x XML 
+			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
+
+			SELECT TestingNo, TestType
+			 , Active
+			FROM RNDTesting t
+			join RNDTestList tl
+			on t.TestType = tl.TestDesc
+			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+		END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDCheckUserExists]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -309,7 +339,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDCompression_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDCompression_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -376,7 +406,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDCompressionReports_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDCompressionReports_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -441,7 +471,254 @@ AS
 	END 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDFatigueTesting_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDEXCOResults_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDEXCOResults_Insert]
+ (         @SelectedTests varchar(max),
+		   @ExcoRating char(4) = null,
+           @StartWT char(8) = null,
+           @FinalWT char(8) = null,
+           @ExposedArea char(8) = null,
+           @StartpH char(5) = null,
+           @FinalpH char(5) = null,
+           @SpeciComment char(50) = null,
+           @Operator char(20) = null,
+           @TestDate datetime,
+           @TimeHrs char(2) = null,
+           @TimeMns char(2) = null,
+           @BatchNo char(4) = null,
+           @EntryBy char(25),
+           @EntryDate datetime
+)       
+AS
+BEGIN	
+		DECLARE @maxRecID INT	
+
+		IF (@SelectedTests IS NOT NULL)
+		BEGIN
+			DECLARE @x XML 
+			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
+			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo], 
+				ExcoRating =@ExcoRating,
+				StartWT =@StartWT,
+				FinalWT =@FinalWT,
+				ExposedArea =@ExposedArea,
+				StartpH =@StartpH,
+				FinalpH =@FinalpH,
+				SpeciComment =@SpeciComment,
+				Operator =@Operator,
+				TestDate =@TestDate,
+				TimeHrs =@TimeHrs,
+				TimeMns =@TimeMns,
+				BatchNo =@BatchNo,
+				EntryBy =@EntryBy,
+				EntryDate =@EntryDate,
+				[Completed] = '1'
+			INTO #tempTestingNo			
+			FROM RNDTesting
+			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+			
+			UPDATE  RNDTesting
+				SET Status = '1' 
+				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+	
+			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDExcoResults])
+			BEGIN
+				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDExcoResults])
+			END
+			ELSE
+			BEGIN
+				SET @maxRecID = 0
+			END
+
+			INSERT INTO [dbo].[RNDExcoResults]
+          ([WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[ExcoRating]
+           ,[StartWT]
+           ,[FinalWT]
+           ,[ExposedArea]
+           ,[StartpH]
+           ,[FinalpH]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]
+           ,[BatchNo]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed])
+			 SELECT 
+            [WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[ExcoRating]
+           ,[StartWT]
+           ,[FinalWT]
+           ,[ExposedArea]
+           ,[StartpH]
+           ,[FinalpH]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]
+           ,[BatchNo]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed]
+		   FROM #tempTestingNo
+
+		select TestingNo 
+		FROM [dbo].[RNDExcoResults]
+		where RecID > @maxRecID
+		
+		DROP TABLE #tempTestingNo
+	END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDFatigueResults_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDFatigueResults_Insert]
+ (         @SelectedTests varchar(max),		       
+           @SpecimenDrawing char(50),
+           @MinStress numeric(4,1),
+           @MaxStress numeric(4,1),
+           @MinLoad numeric(7,2),
+           @MaxLoad numeric(7,2),
+           @WidthOrDia numeric(8,5),
+           @Thickness numeric(8,5),
+           @HoleDia numeric(8,5),
+           @AvgChamferDepth numeric(8,5),
+           @Frequency char(5),
+           @CyclesToFailure numeric(8,0),
+           @Roughness numeric(5,2),
+           @TestFrame char(5),
+           @Comment char(50),
+           @FractureLocation char(50),
+           @Operator char(20),
+           @TestDate datetime,
+           @TestTime char(15),
+           @EntryBy char(25),
+           @EntryDate datetime		  
+)       
+AS
+BEGIN			
+		DECLARE @maxRecID INT	
+
+		IF (@SelectedTests IS NOT NULL)
+		BEGIN
+			DECLARE @x XML 
+			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
+			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo],										
+			SpecimenDrawing = @SpecimenDrawing
+           ,MinStress = @MinStress
+           ,MaxStress = @MaxStress
+           ,MinLoad = @MinLoad
+           ,MaxLoad = @MaxLoad
+           ,WidthOrDia = @WidthOrDia
+           ,Thickness = @Thickness
+           ,HoleDia = @HoleDia
+           ,AvgChamferDepth = @AvgChamferDepth
+           ,Frequency = @Frequency
+           ,CyclesToFailure = @CyclesToFailure
+           ,Roughness = @Roughness
+           ,TestFrame = @TestFrame
+           ,Comment = @Comment
+           ,FractureLocation = @FractureLocation
+           ,Operator = @Operator
+           ,TestDate = @TestDate
+           ,TestTime = @TestTime
+           ,EntryBy = @EntryBy
+           ,EntryDate = @EntryDate
+			,Completed = '1'
+			INTO #tempTestingNo			
+			FROM RNDTesting
+			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDFatigueTestingResults])
+			BEGIN
+				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDFatigueTestingResults])
+			END
+			ELSE
+			BEGIN
+				SET @maxRecID = 0
+			END
+
+			INSERT INTO [dbo].[RNDFatigueTestingResults]
+          ([WorkStudyID]
+           ,[TestNo]
+           ,[SpecimenDrawing]
+           ,[MinStress]
+           ,[MaxStress]
+           ,[MinLoad]
+           ,[MaxLoad]
+           ,[WidthOrDia]
+           ,[Thickness]
+           ,[HoleDia]
+           ,[AvgChamferDepth]
+           ,[Frequency]
+           ,[CyclesToFailure]
+           ,[Roughness]
+           ,[TestFrame]
+           ,[Comment]
+           ,[FractureLocation]
+           ,[Operator]
+           ,[TestDate]
+           ,[TestTime]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed])
+			 SELECT 
+            [WorkStudyID]
+           ,TestingNo
+           ,[SpecimenDrawing]
+           ,[MinStress]
+           ,[MaxStress]
+           ,[MinLoad]
+           ,[MaxLoad]
+           ,[WidthOrDia]
+           ,[Thickness]
+           ,[HoleDia]
+           ,[AvgChamferDepth]
+           ,[Frequency]
+           ,[CyclesToFailure]
+           ,[Roughness]
+           ,[TestFrame]
+           ,[Comment]
+           ,[FractureLocation]
+           ,[Operator]
+           ,[TestDate]
+           ,[TestTime]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed]
+		   FROM #tempTestingNo
+		 
+		select TestNo  
+		FROM [dbo].[RNDFatigueTestingResults]
+		where RecID > @maxRecID
+		
+		DROP TABLE #tempTestingNo
+	END
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDFatigueTesting_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -538,7 +815,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDFractureToughness_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDFractureToughness_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -629,7 +906,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGageThickness_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGageThickness_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -651,7 +928,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetAlloyPartTemper]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetAlloyPartTemper]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -671,7 +948,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetHole]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetHole]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -694,7 +971,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetLocation2]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetLocation2]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -718,7 +995,31 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetPieceNo]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetLocation2_ByMillLotIdAndWokStudyId]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE 
+ [dbo].[RNDGetLocation2_ByMillLotIdAndWokStudyId]
+@MillLotNo char(10),
+@WorkStudyID VARCHAR(50) = NULL
+AS
+	BEGIN
+		SELECT distinct Location2 FROM RNDMaterial where 
+		@MillLotNo = MillLotNo	
+		AND @WorkStudyID = WorkStudyID	
+		AND Location2 is not NULL
+		 
+------------------------------------------------------------------------------------------------------------
+--DELETE FLAGS
+		AND ((Deleted != 1 )or(Deleted is null))
+------------------------------------------------------------------------------------------------------------
+	END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDGetPieceNo]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -739,7 +1040,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetSoNumByProcessID]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetSoNumByProcessID]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -758,25 +1059,23 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetTestTypeFromTesting]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetTestTypeFromTesting]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE 
  [dbo].[RNDGetTestTypeFromTesting]
-(
-@WorkStudyID VARCHAR(MAX)
-)
 AS
 BEGIN		
-	SELECT distinct TestType FROM RNDTesting where WorkStudyID = @WorkStudyID
-	AND ((Deleted != 1 )or(Deleted is null))
+	SELECT distinct TestType FROM RNDTesting 	
+	WHERE ((Deleted != 1 )or(Deleted is null))
+	AND (TestType IS NOT NULL)  
 END;
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetUser_ReadByID]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetUser_ReadByID]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -796,7 +1095,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGetWorkStudyFromTesting]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGetWorkStudyFromTesting]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -823,7 +1122,7 @@ BEGIN
 END;
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDGroupName_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDGroupName_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -958,7 +1257,112 @@ END;
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDHole_READByMillLotNo]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDHardnessResults_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDHardnessResults_Insert]
+ (         @SelectedTests varchar(max),		       
+           @SpeciComment char(50) = null,
+           @Operator char(20) = null,
+           @TestDate datetime,
+           @TimeHrs char(2) = null,
+           @TimeMns char(2) = null,         
+           @EntryBy char(25),
+           @EntryDate datetime,
+		   @SubConduct char(4),
+           @SurfConduct char(4),
+           @Hardness char(5)
+)       
+AS
+BEGIN			
+		DECLARE @maxRecID INT	
+
+		IF (@SelectedTests IS NOT NULL)
+		BEGIN
+			DECLARE @x XML 
+			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
+			
+			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo],						
+				SpeciComment =@SpeciComment,
+				Operator =@Operator,
+				TestDate =@TestDate,
+				TimeHrs =@TimeHrs,
+				TimeMns =@TimeMns,				
+				EntryBy =@EntryBy,
+				EntryDate =@EntryDate,
+				SubConduct =@SubConduct,
+				SurfConduct =@SurfConduct,
+				Hardness =@Hardness,
+				[Completed] = '1'
+			INTO #tempTestingNo			
+			FROM RNDTesting
+			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			 UPDATE  RNDTesting
+				SET Status = '1' 
+				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDHardnessResults])
+			BEGIN
+				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDHardnessResults])
+			END
+			ELSE
+			BEGIN
+				SET @maxRecID = 0
+			END
+
+			INSERT INTO [dbo].[RNDHardnessResults]
+          ([WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[SubConduct]
+           ,[SurfConduct]
+           ,[Hardness]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed])
+			 SELECT 
+            [WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[SubConduct]
+           ,[SurfConduct]
+           ,[Hardness]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed]
+		   FROM #tempTestingNo
+
+		   
+
+		select TestingNo 
+		FROM [dbo].[RNDHardnessResults]
+		where RecID > @maxRecID
+		
+		DROP TABLE #tempTestingNo
+	END
+END
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDHole_READByMillLotNo]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -984,7 +1388,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDHTLogID_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDHTLogID_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1005,7 +1409,140 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLocation_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDIGCResults_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDIGCResults_Insert]
+ (         @SelectedTests varchar(max) 
+	      ,@SubConduct char(4) 
+           ,@SurfConduct char(4) 
+           ,@MinDepth char(7) 
+           ,@MaxDepth char(7) 
+           ,@AvgDepth char(7) 
+           ,@SpeciComment char(50) 
+           ,@Operator char(20) 
+           ,@TestDate datetime 
+           ,@TimeHrs char(2) 
+           ,@TimeMns char(2) 
+           ,@EntryBy char(25) 
+           ,@EntryDate datetime 
+)       
+AS
+BEGIN			
+		DECLARE @maxRecID INT	
+
+		IF (@SelectedTests IS NOT NULL)
+		BEGIN
+			DECLARE @x XML 
+			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
+			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo],										
+			SelectedTests = @SelectedTests,
+	        SubConduct = @SubConduct, 
+			SurfConduct = @SurfConduct, 
+			MinDepth = @MinDepth, 
+			MaxDepth = @MaxDepth,
+			AvgDepth = @AvgDepth, 
+			SpeciComment = @SpeciComment,
+			Operator = @Operator,
+			TestDate = @TestDate, 
+			TimeHrs = @TimeHrs, 
+			TimeMns = @TimeMns,           
+            EntryBy = @EntryBy,
+            EntryDate = @EntryDate,
+			Completed = '1'
+			INTO #tempTestingNo			
+			FROM RNDTesting
+			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			UPDATE  RNDTesting
+				SET Status = '1' 
+				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDIGCResults])
+			BEGIN
+				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDIGCResults])
+			END
+			ELSE
+			BEGIN
+				SET @maxRecID = 0
+			END
+
+			INSERT INTO [dbo].[RNDIGCResults]
+            ([WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[SubConduct]
+           ,[SurfConduct]
+           ,[MinDepth]
+           ,[MaxDepth]
+           ,[AvgDepth]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed])
+			 SELECT 
+              [WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[SubConduct]
+           ,[SurfConduct]
+           ,[MinDepth]
+           ,[MaxDepth]
+           ,[AvgDepth]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed]
+		   FROM #tempTestingNo
+		 
+		select TestingNo 
+		FROM [dbo].[RNDIGCResults]
+		where RecID > @maxRecID
+		
+		DROP TABLE #tempTestingNo
+	END
+END
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDImportTestList_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+           
+CREATE PROCEDURE 
+[dbo].[RNDImportTestList_READ] 
+@Active char 
+AS
+	BEGIN
+		SELECT [RecID]
+      ,[TestDesc]
+      ,[TestTableName]
+      ,[Active]
+      ,[TabPos]
+  FROM [dbo].[RNDTestList]
+  WHERE Active = @Active
+	END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDLocation_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1044,7 +1581,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLocation_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLocation_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1058,7 +1595,30 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLogin_Delete]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLocation_Update]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDLocation_Update]
+	@RecID [int],  
+    @PlantDesc char(20),
+    @PlantState char(2),
+    @PlantType tinyint        
+AS
+BEGIN	
+	UPDATE [dbo].[RNDLocation]
+	SET 
+		[PlantDesc] = @PlantDesc
+      ,[PlantState] =  @PlantState 
+      ,[PlantType] =  @PlantType
+	 WHERE RecID = @RecID   
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDLogin_Delete]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1075,7 +1635,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLogin_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLogin_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1108,7 +1668,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLogin_ReadByID]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLogin_ReadByID]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1124,7 +1684,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLogin_Update]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLogin_Update]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1143,7 +1703,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDLotID_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDLotID_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1174,7 +1734,99 @@ insert into #tempRNDProcessing (LotID)
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDMaterial_Delete]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDMacroEtchResults_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDMacroEtchResults_Insert]
+ (         @SelectedTests varchar(max),
+		   @MaxRexGrainDepth char(50) = null,         
+           @SpeciComment char(50) = null,
+           @Operator char(20) = null,
+           @TestDate datetime,
+           @TimeHrs char(2) = null,
+           @TimeMns char(2) = null,         
+           @EntryBy char(25),
+           @EntryDate datetime
+)       
+AS
+BEGIN			
+		DECLARE @maxRecID INT	
+
+		IF (@SelectedTests IS NOT NULL)
+		BEGIN
+			DECLARE @x XML 
+			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
+			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo], 
+				MaxRexGrainDepth =@MaxRexGrainDepth,				
+				SpeciComment =@SpeciComment,
+				Operator =@Operator,
+				TestDate =@TestDate,
+				TimeHrs =@TimeHrs,
+				TimeMns =@TimeMns,				
+				EntryBy =@EntryBy,
+				EntryDate =@EntryDate,
+				[Completed] = '1'
+			INTO #tempTestingNo			
+			FROM RNDTesting
+			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			UPDATE  RNDTesting
+				SET Status = '1' 
+				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDMacroEtchResults])
+			BEGIN
+				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDMacroEtchResults])
+			END
+			ELSE
+			BEGIN
+				SET @maxRecID = 0
+			END
+
+			INSERT INTO [dbo].[RNDMacroEtchResults]
+          ([WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[MaxRexGrainDepth]           
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]        
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed])
+			 SELECT 
+            [WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[MaxRexGrainDepth]           
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]        
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed]
+		   FROM #tempTestingNo
+
+		select TestingNo 
+		FROM [dbo].[RNDMacroEtchResults]
+		where RecID > @maxRecID
+		
+		DROP TABLE #tempTestingNo
+	END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDMaterial_Delete]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1213,7 +1865,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDMillLotNo_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDMillLotNo_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1232,7 +1884,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDModulusCompression_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDModulusCompression_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1296,7 +1948,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDModulusTension_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDModulusTension_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1360,7 +2012,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDNotchYield_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDNotchYield_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1430,7 +2082,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDOpticalMountReports_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDOpticalMountReports_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1487,7 +2139,97 @@ AS
 	END 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDPcNo_READByMilLotNo]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDOpticalMountResults_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDOpticalMountResults_Insert]
+ (         @SelectedTests varchar(max),		       
+           @SpeciComment char(50) = null,
+           @Operator char(20) = null,
+           @TestDate datetime,
+           @TimeHrs char(2) = null,
+           @TimeMns char(2) = null,         
+           @EntryBy char(25),
+           @EntryDate datetime
+)       
+AS
+BEGIN			
+		DECLARE @maxRecID INT	
+
+		IF (@SelectedTests IS NOT NULL)
+		BEGIN
+			DECLARE @x XML 
+			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
+			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo],						
+				SpeciComment =@SpeciComment,
+				Operator =@Operator,
+				TestDate =@TestDate,
+				TimeHrs =@TimeHrs,
+				TimeMns =@TimeMns,				
+				EntryBy =@EntryBy,
+				EntryDate =@EntryDate,
+				[Completed] = '1'
+			INTO #tempTestingNo			
+			FROM RNDTesting
+			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			UPDATE  RNDTesting
+				SET Status = '1' 
+				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDOpticalMountResults])
+			BEGIN
+				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDOpticalMountResults])
+			END
+			ELSE
+			BEGIN
+				SET @maxRecID = 0
+			END
+
+			INSERT INTO [dbo].[RNDOpticalMountResults]
+          ([WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]        
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed])
+			 SELECT 
+            [WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]        
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestDate]
+           ,[TimeHrs]
+           ,[TimeMns]        
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed]
+		   FROM #tempTestingNo
+
+		select TestingNo 
+		FROM [dbo].[RNDOpticalMountResults]
+		where RecID > @maxRecID
+		
+		DROP TABLE #tempTestingNo
+	END
+END
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDPcNo_READByMilLotNo]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1512,7 +2254,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDPrintTesting]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDPrintTesting]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1588,7 +2330,7 @@ END;
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessing_Delete]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessing_Delete]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1611,7 +2353,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1727,7 +2469,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1799,7 +2541,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_ReadByID]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_ReadByID]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1832,7 +2574,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Update]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDProcessingMaterial_Update]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1935,7 +2677,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDRegisteredUser_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDRegisteredUser_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1987,7 +2729,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDRegisteredUser_ReadByID]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDRegisteredUser_ReadByID]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2004,7 +2746,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDReports_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDReports_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2120,7 +2862,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDResetPassword]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDResetPassword]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2152,7 +2894,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDResidualStrength_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDResidualStrength_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2231,7 +2973,102 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDSecurityQuestions_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDSCCResults_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDSCCResults_Insert]
+ (          @SelectedTests varchar(max),
+		   @StressKsi char(5) = null,
+           @TimeDays char(2) = null,
+           @TestStatus char(5) = null,
+           @SpeciComment char(50) = null,
+           @Operator char(20) = null,
+           @TestStartDate datetime = null,
+           @TestEndDate datetime = null,
+           @EntryBy char(25),
+           @EntryDate datetime
+)       
+AS
+BEGIN	
+		DECLARE @maxRecID INT	
+
+		IF (@SelectedTests IS NOT NULL)
+		BEGIN
+			DECLARE @x XML 
+			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
+			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo], StressKsi = @StressKsi,
+			   TimeDays =@TimeDays,
+			   TestStatus =@TestStatus,
+			   SpeciComment =@SpeciComment,
+			   Operator =@Operator,
+			   TestStartDate =@TestStartDate,
+			   TestEndDate =@TestEndDate,
+			   EntryBy =@EntryBy,
+			   EntryDate =@EntryDate,
+			   [Completed] = '1'
+
+			INTO #tempTestingNo			
+			FROM RNDTesting
+			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+
+			UPDATE  RNDTesting
+				SET Status = '1' 
+				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+			
+			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDSCCResults])
+			BEGIN
+				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDSCCResults])
+			END
+			ELSE
+			BEGIN
+				SET @maxRecID = 0
+			END
+			INSERT INTO [dbo].[RNDSCCResults]
+           ([WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[StressKsi]
+           ,[TimeDays]
+           ,[TestStatus]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestStartDate]
+           ,[TestEndDate]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed])
+			 SELECT 
+            [WorkStudyID]
+           ,[MillLotNo]
+           ,[LotID]
+           ,[TestingNo]
+           ,[StressKsi]
+           ,[TimeDays]
+           ,[TestStatus]
+           ,[SpeciComment]
+           ,[Operator]
+           ,[TestStartDate]
+           ,[TestEndDate]
+           ,[EntryBy]
+           ,[EntryDate]
+           ,[Completed]
+		   FROM #tempTestingNo
+
+		select TestingNo 
+		FROM [dbo].[RNDSCCResults]
+		where RecID > @maxRecID
+		
+		DROP TABLE #tempTestingNo
+	END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDSecurityQuestions_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2244,7 +3081,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDSecurityTokens_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDSecurityTokens_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2261,7 +3098,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDShear_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDShear_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2325,7 +3162,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDStudyStatus_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDStudyStatus_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2338,7 +3175,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDStudyType_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDStudyType_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2375,7 +3212,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDStudyType_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDStudyType_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2389,7 +3226,25 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDSubTestType_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDStudyType_Update]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE
+ [dbo].[RNDStudyType_Update]
+	@RecID [int],
+   @TypeDesc [varchar](30)          
+AS
+BEGIN	
+	UPDATE [dbo].[RNDStudyType]
+	   SET [TypeDesc] = @TypeDesc 
+	 WHERE RecID = @RecID   
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[RNDSubTestType_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2405,7 +3260,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTension_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTension_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2478,7 +3333,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTensionReports_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTensionReports_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2537,7 +3392,7 @@ AS
 	END 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTesting_Delete]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTesting_Delete]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2574,7 +3429,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2674,7 +3529,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2728,7 +3583,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_ReadByTestingNo]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_ReadByTestingNo]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2753,7 +3608,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Update]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestingMaterial_Update]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2803,7 +3658,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestType_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestType_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2821,7 +3676,7 @@ AS
 			SELECT TestDesc  as TestDesc  FROM RNDTestList
 	END
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestTypes_READfromRNDTesting]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestTypes_READfromRNDTesting]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2840,7 +3695,7 @@ END;
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDTestWorkStudy_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDTestWorkStudy_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2858,7 +3713,7 @@ END;
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUACPartList_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUACPartList_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2963,7 +3818,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUACPartListing_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUACPartListing_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3061,7 +3916,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUserPasswordReset]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUserPasswordReset]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3117,7 +3972,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUserPermissionLevel_READ]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUserPermissionLevel_READ]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3142,7 +3997,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUserSecurityAnswers_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUserSecurityAnswers_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3162,7 +4017,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDUserSecurityAnswers_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDUserSecurityAnswers_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3178,7 +4033,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Delete]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Delete]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3217,7 +4072,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Insert]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Insert]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3272,7 +4127,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Read]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Read]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3367,7 +4222,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_ReadByID]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_ReadByID]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3387,7 +4242,7 @@ AS
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Update]    Script Date: 4/11/2018 10:01:35 AM ******/
+/****** Object:  StoredProcedure [dbo].[RNDWorkStudy_Update]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3424,977 +4279,95 @@ END
 
 
 GO
----
-
-
-GO
-/****** Object:  StoredProcedure [dbo].[RNDCheckTestType_READ]    Script Date: 4/11/2018 9:59:56 AM ******/
+/****** Object:  UserDefinedFunction [dbo].[fnSplitValues]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE
- [dbo].[RNDCheckTestType_READ]
- (          @SelectedTests varchar(max)
-			--@Active	 
-)       
+
+CREATE FUNCTION [dbo].[fnSplitValues]
+(
+	@IDs NVARCHAR(MAX),
+	@splitBy VARCHAR(1)
+)
+RETURNS 
+@SplitValues TABLE 
+(
+	ID int
+)
 AS
 BEGIN
+	-- Fill the table variable with the rows for your result set
+	IF @splitBy IS NULL
+		SET @splitBy = ','
+	DECLARE @xml xml
+	SET @xml = N'<root><r>' + replace(@IDs,@splitBy,'</r><r>') + '</r></root>'
 
-		IF (@SelectedTests IS NOT NULL)
-		
+	INSERT INTO @SplitValues(ID)
+	SELECT r.value('.','int')
+	FROM @xml.nodes('//root/r') as records(r)
+
+	RETURN
+END
+
+
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetSelectValue]    Script Date: 5/14/2018 9:18:58 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE FUNCTION [dbo].[GetSelectValue]
+(
+    @tname VARCHAR(50),
+	@colName VARCHAR(50)=NULL,
+	@colValue VARCHAR(100)=NULL
+)
+RETURNS VARCHAR(100)
+AS
+BEGIN
+    Declare @value varchar(100) = ''
+	IF(@tname ='RNDStudyType')
 		BEGIN
-			DECLARE @x XML 
-			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
-
-			SELECT TestingNo, TestType
-			 , Active
-			FROM RNDTesting t
-			join RNDTestList tl
-			on t.TestType = tl.TestDesc
-			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
+			SELECT @value = TypeDesc FROM RNDStudyType WHERE RTRIM(TypeStudy)=RTRIM(@colValue)
 		END
-END
-
-GO
-
-/****** Object:  StoredProcedure [dbo].[RNDEXCOResults_Insert]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE
- [dbo].[RNDEXCOResults_Insert]
- (         @SelectedTests varchar(max),
-		   @ExcoRating char(4) = null,
-           @StartWT char(8) = null,
-           @FinalWT char(8) = null,
-           @ExposedArea char(8) = null,
-           @StartpH char(5) = null,
-           @FinalpH char(5) = null,
-           @SpeciComment char(50) = null,
-           @Operator char(20) = null,
-           @TestDate datetime,
-           @TimeHrs char(2) = null,
-           @TimeMns char(2) = null,
-           @BatchNo char(4) = null,
-           @EntryBy char(25),
-           @EntryDate datetime
-)       
-AS
-BEGIN	
-		DECLARE @maxRecID INT	
-
-		IF (@SelectedTests IS NOT NULL)
+	ELSE IF(@tname ='RNDStudyStatus')
 		BEGIN
-			DECLARE @x XML 
-			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
-			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo], 
-				ExcoRating =@ExcoRating,
-				StartWT =@StartWT,
-				FinalWT =@FinalWT,
-				ExposedArea =@ExposedArea,
-				StartpH =@StartpH,
-				FinalpH =@FinalpH,
-				SpeciComment =@SpeciComment,
-				Operator =@Operator,
-				TestDate =@TestDate,
-				TimeHrs =@TimeHrs,
-				TimeMns =@TimeMns,
-				BatchNo =@BatchNo,
-				EntryBy =@EntryBy,
-				EntryDate =@EntryDate,
-				[Completed] = '1'
-			INTO #tempTestingNo			
-			FROM RNDTesting
-			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-			
-			UPDATE  RNDTesting
-				SET Status = '1' 
-				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-	
-			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDExcoResults])
-			BEGIN
-				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDExcoResults])
-			END
-			ELSE
-			BEGIN
-				SET @maxRecID = 0
-			END
-
-			INSERT INTO [dbo].[RNDExcoResults]
-          ([WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[ExcoRating]
-           ,[StartWT]
-           ,[FinalWT]
-           ,[ExposedArea]
-           ,[StartpH]
-           ,[FinalpH]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]
-           ,[BatchNo]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed])
-			 SELECT 
-            [WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[ExcoRating]
-           ,[StartWT]
-           ,[FinalWT]
-           ,[ExposedArea]
-           ,[StartpH]
-           ,[FinalpH]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]
-           ,[BatchNo]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed]
-		   FROM #tempTestingNo
-
-		select TestingNo 
-		FROM [dbo].[RNDExcoResults]
-		where RecID > @maxRecID
-		
-		DROP TABLE #tempTestingNo
-	END
-END
-
-GO
-
-/****** Object:  StoredProcedure [dbo].[RNDFatigueResults_Insert]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE
- [dbo].[RNDFatigueResults_Insert]
- (         @SelectedTests varchar(max),		       
-           @SpecimenDrawing char(50),
-           @MinStress numeric(4,1),
-           @MaxStress numeric(4,1),
-           @MinLoad numeric(7,2),
-           @MaxLoad numeric(7,2),
-           @WidthOrDia numeric(8,5),
-           @Thickness numeric(8,5),
-           @HoleDia numeric(8,5),
-           @AvgChamferDepth numeric(8,5),
-           @Frequency char(5),
-           @CyclesToFailure numeric(8,0),
-           @Roughness numeric(5,2),
-           @TestFrame char(5),
-           @Comment char(50),
-           @FractureLocation char(50),
-           @Operator char(20),
-           @TestDate datetime,
-           @TestTime char(15),
-           @EntryBy char(25),
-           @EntryDate datetime		  
-)       
-AS
-BEGIN			
-		DECLARE @maxRecID INT	
-
-		IF (@SelectedTests IS NOT NULL)
+			SELECT @value = StatusDesc FROM RNDStudyStatus WHERE RTRIM(StudyStatus)=RTRIM(@colValue)
+		END
+	ELSE IF(@tname ='RNDLocation')
 		BEGIN
-			DECLARE @x XML 
-			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
-			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo],										
-			SpecimenDrawing = @SpecimenDrawing
-           ,MinStress = @MinStress
-           ,MaxStress = @MaxStress
-           ,MinLoad = @MinLoad
-           ,MaxLoad = @MaxLoad
-           ,WidthOrDia = @WidthOrDia
-           ,Thickness = @Thickness
-           ,HoleDia = @HoleDia
-           ,AvgChamferDepth = @AvgChamferDepth
-           ,Frequency = @Frequency
-           ,CyclesToFailure = @CyclesToFailure
-           ,Roughness = @Roughness
-           ,TestFrame = @TestFrame
-           ,Comment = @Comment
-           ,FractureLocation = @FractureLocation
-           ,Operator = @Operator
-           ,TestDate = @TestDate
-           ,TestTime = @TestTime
-           ,EntryBy = @EntryBy
-           ,EntryDate = @EntryDate
-			,Completed = '1'
-			INTO #tempTestingNo			
-			FROM RNDTesting
-			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDFatigueTestingResults])
-			BEGIN
-				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDFatigueTestingResults])
-			END
-			ELSE
-			BEGIN
-				SET @maxRecID = 0
-			END
-
-			INSERT INTO [dbo].[RNDFatigueTestingResults]
-          ([WorkStudyID]
-           ,[TestNo]
-           ,[SpecimenDrawing]
-           ,[MinStress]
-           ,[MaxStress]
-           ,[MinLoad]
-           ,[MaxLoad]
-           ,[WidthOrDia]
-           ,[Thickness]
-           ,[HoleDia]
-           ,[AvgChamferDepth]
-           ,[Frequency]
-           ,[CyclesToFailure]
-           ,[Roughness]
-           ,[TestFrame]
-           ,[Comment]
-           ,[FractureLocation]
-           ,[Operator]
-           ,[TestDate]
-           ,[TestTime]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed])
-			 SELECT 
-            [WorkStudyID]
-           ,TestingNo
-           ,[SpecimenDrawing]
-           ,[MinStress]
-           ,[MaxStress]
-           ,[MinLoad]
-           ,[MaxLoad]
-           ,[WidthOrDia]
-           ,[Thickness]
-           ,[HoleDia]
-           ,[AvgChamferDepth]
-           ,[Frequency]
-           ,[CyclesToFailure]
-           ,[Roughness]
-           ,[TestFrame]
-           ,[Comment]
-           ,[FractureLocation]
-           ,[Operator]
-           ,[TestDate]
-           ,[TestTime]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed]
-		   FROM #tempTestingNo
-		 
-		select TestingNo as [TestNo]  
-		FROM [dbo].[RNDHardnessResults]
-		where RecID > @maxRecID
-		
-		DROP TABLE #tempTestingNo
-	END
-END
-
-
-/****** Object:  StoredProcedure [dbo].[RNDFatigueTesting_Insert]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE 
- [dbo].[RNDFatigueTesting_Insert]
-		@WorkStudyID char(10),  
-		@TestNo int,
-        @SpecimenDrawing char(50),
-        @MinStress numeric(4,1),
-        @MaxStress numeric(4,1),
-        @MinLoad numeric(7,2),
-        @MaxLoad numeric(7,2),
-        @WidthOrDia numeric(8,5),
-        @Thickness numeric(8,5),
-        @HoleDia numeric(8,5),
-        @AvgChamferDepth numeric(8,5),
-        @Frequency char(5),
-        @CyclesToFailure numeric(8,0),
-        @Roughness numeric(5,2),
-        @TestFrame char(5),
-        @Comment char(50),
-        @FractureLocation char(50),
-        @Operator char(20),
-        @TestDate datetime,
-        @TestTime char(15),
-        @EntryBy char(25),
-        @EntryDate datetime,
-        @Completed char(1)
-AS
-BEGIN		
-	INSERT INTO [dbo].[RNDFatigueTestingResults]	
-     (
-			[WorkStudyID]     
-		   ,[TestNo]    
-           ,[SpecimenDrawing]
-           ,[MinStress]
-           ,[MaxStress]
-           ,[MinLoad]
-           ,[MaxLoad]
-           ,[WidthOrDia]
-           ,[Thickness]
-           ,[HoleDia]
-           ,[AvgChamferDepth]
-           ,[Frequency]
-           ,[CyclesToFailure]
-           ,[Roughness]
-           ,[TestFrame]
-           ,[Comment]
-           ,[FractureLocation]
-           ,[Operator]
-           ,[TestDate]
-           ,[TestTime]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed])
-     VALUES
-	 (
-	 		@WorkStudyID          
-		   ,@TestNo
-           ,@SpecimenDrawing
-           ,@MinStress
-           ,@MaxStress
-           ,@MinLoad
-           ,@MaxLoad
-           ,@WidthOrDia
-           ,@Thickness
-           ,@HoleDia
-           ,@AvgChamferDepth
-           ,@Frequency
-           ,@CyclesToFailure
-           ,@Roughness
-           ,@TestFrame
-           ,@Comment
-           ,@FractureLocation
-           ,@Operator
-           ,@TestDate
-           ,@TestTime
-           ,@EntryBy
-           ,@EntryDate
-           ,@Completed)
-
-    DECLARE @RecId int
-
-	SELECT @RecId = [RecID]
-	FROM [dbo].[RNDFatigueTestingResults]
-	WHERE @@ROWCOUNT > 0 AND [RecID] = scope_identity()
-
-	SELECT t0.[RecID]
-	FROM [dbo].[RNDFatigueTestingResults] AS t0
-	WHERE @@ROWCOUNT > 0 AND t0.[RecID] = @RecId
-END
-
-
-GO
-
-/****** Object:  StoredProcedure [dbo].[RNDGetLocation2_ByMillLotIdAndWokStudyId]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE 
- [dbo].[RNDGetLocation2_ByMillLotIdAndWokStudyId]
-@MillLotNo char(10),
-@WorkStudyID VARCHAR(50) = NULL
-AS
-	BEGIN
-		SELECT distinct Location2 FROM RNDMaterial where 
-		@MillLotNo = MillLotNo	
-		AND @WorkStudyID = WorkStudyID	
-		AND Location2 is not NULL
-		 
-------------------------------------------------------------------------------------------------------------
---DELETE FLAGS
-		AND ((Deleted != 1 )or(Deleted is null))
-------------------------------------------------------------------------------------------------------------
-	END
-
-GO
-
-/****** Object:  StoredProcedure [dbo].[RNDGetTestTypeFromTesting]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE 
- [dbo].[RNDGetTestTypeFromTesting]
-AS
-BEGIN		
-	SELECT distinct TestType FROM RNDTesting 	
-	WHERE ((Deleted != 1 )or(Deleted is null))
-	AND (TestType IS NOT NULL)  
-END;
-
-GO
-
-/****** Object:  StoredProcedure [dbo].[RNDHardnessResults_Insert]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE
- [dbo].[RNDHardnessResults_Insert]
- (         @SelectedTests varchar(max),		       
-           @SpeciComment char(50) = null,
-           @Operator char(20) = null,
-           @TestDate datetime,
-           @TimeHrs char(2) = null,
-           @TimeMns char(2) = null,         
-           @EntryBy char(25),
-           @EntryDate datetime,
-		   @SubConduct char(4),
-           @SurfConduct char(4),
-           @Hardness char(5)
-)       
-AS
-BEGIN			
-		DECLARE @maxRecID INT	
-
-		IF (@SelectedTests IS NOT NULL)
-		BEGIN
-			DECLARE @x XML 
-			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
-			
-			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo],						
-				SpeciComment =@SpeciComment,
-				Operator =@Operator,
-				TestDate =@TestDate,
-				TimeHrs =@TimeHrs,
-				TimeMns =@TimeMns,				
-				EntryBy =@EntryBy,
-				EntryDate =@EntryDate,
-				SubConduct =@SubConduct,
-				SurfConduct =@SurfConduct,
-				Hardness =@Hardness,
-				[Completed] = '1'
-			INTO #tempTestingNo			
-			FROM RNDTesting
-			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			 UPDATE  RNDTesting
-				SET Status = '1' 
-				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDHardnessResults])
-			BEGIN
-				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDHardnessResults])
-			END
-			ELSE
-			BEGIN
-				SET @maxRecID = 0
-			END
-
-			INSERT INTO [dbo].[RNDHardnessResults]
-          ([WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[SubConduct]
-           ,[SurfConduct]
-           ,[Hardness]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed])
-			 SELECT 
-            [WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[SubConduct]
-           ,[SurfConduct]
-           ,[Hardness]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed]
-		   FROM #tempTestingNo
-
-		   
-
-		select TestingNo 
-		FROM [dbo].[RNDHardnessResults]
-		where RecID > @maxRecID
-		
-		DROP TABLE #tempTestingNo
-	END
+			SELECT @value = PlantDesc FROM RNDLocation WHERE RTRIM(PlantState)=RTRIM(@colValue)
+		END
+    RETURN RTRIM(@value)
 END
 
 
 
-GO
 
-/****** Object:  StoredProcedure [dbo].[RNDIGCResults_Insert]    Script Date: 4/11/2018 9:59:56 AM ******/
+GO
+/****** Object:  UserDefinedFunction [dbo].[GetStudyScope]    Script Date: 5/14/2018 9:18:58 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE
- [dbo].[RNDIGCResults_Insert]
- (         @SelectedTests varchar(max) 
-	      ,@SubConduct char(4) 
-           ,@SurfConduct char(4) 
-           ,@MinDepth char(7) 
-           ,@MaxDepth char(7) 
-           ,@AvgDepth char(7) 
-           ,@SpeciComment char(50) 
-           ,@Operator char(20) 
-           ,@TestDate datetime 
-           ,@TimeHrs char(2) 
-           ,@TimeMns char(2) 
-           ,@EntryBy char(25) 
-           ,@EntryDate datetime 
-)       
+
+
+CREATE FUNCTION [dbo].[GetStudyScope]
+(
+    @workStudyId VARCHAR(50)
+)
+RETURNS VARCHAR(100)
 AS
-BEGIN			
-		DECLARE @maxRecID INT	
-
-		IF (@SelectedTests IS NOT NULL)
-		BEGIN
-			DECLARE @x XML 
-			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
-			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo],										
-			SelectedTests = @SelectedTests,
-	        SubConduct = @SubConduct, 
-			SurfConduct = @SurfConduct, 
-			MinDepth = @MinDepth, 
-			MaxDepth = @MaxDepth,
-			AvgDepth = @AvgDepth, 
-			SpeciComment = @SpeciComment,
-			Operator = @Operator,
-			TestDate = @TestDate, 
-			TimeHrs = @TimeHrs, 
-			TimeMns = @TimeMns,           
-            EntryBy = @EntryBy,
-            EntryDate = @EntryDate,
-			Completed = '1'
-			INTO #tempTestingNo			
-			FROM RNDTesting
-			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			UPDATE  RNDTesting
-				SET Status = '1' 
-				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDIGCResults])
-			BEGIN
-				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDIGCResults])
-			END
-			ELSE
-			BEGIN
-				SET @maxRecID = 0
-			END
-
-			INSERT INTO [dbo].[RNDIGCResults]
-            ([WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[SubConduct]
-           ,[SurfConduct]
-           ,[MinDepth]
-           ,[MaxDepth]
-           ,[AvgDepth]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed])
-			 SELECT 
-              [WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[SubConduct]
-           ,[SurfConduct]
-           ,[MinDepth]
-           ,[MaxDepth]
-           ,[AvgDepth]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed]
-		   FROM #tempTestingNo
-		 
-		select TestingNo 
-		FROM [dbo].[RNDIGCResults]
-		where RecID > @maxRecID
-		
-		DROP TABLE #tempTestingNo
-	END
+BEGIN
+    Declare @value varchar(100) = ''
+	SELECT @value = StudyScope FROM RNDStudyScope WHERE RTRIM(WorkStudyID)=RTRIM(@workStudyId)
+    RETURN RTRIM(@value)
 END
 
 
 
-GO
-/****** Object:  StoredProcedure [dbo].[RNDImportTestList_READ]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-           
-CREATE PROCEDURE 
-[dbo].[RNDImportTestList_READ] 
-@Active char 
-AS
-	BEGIN
-		SELECT [RecID]
-      ,[TestDesc]
-      ,[TestTableName]
-      ,[Active]
-      ,[TabPos]
-  FROM [dbo].[RNDTestList]
-  WHERE Active = @Active
-	END
 
 GO
-
-/****** Object:  StoredProcedure [dbo].[RNDLocation_Update]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE
- [dbo].[RNDLocation_Update]
-	@RecID [int],  
-    @PlantDesc char(20),
-    @PlantState char(2),
-    @PlantType tinyint        
-AS
-BEGIN	
-	UPDATE [dbo].[RNDLocation]
-	SET 
-		[PlantDesc] = @PlantDesc
-      ,[PlantState] =  @PlantState 
-      ,[PlantType] =  @PlantType
-	 WHERE RecID = @RecID   
-END
-
-GO
-
-/****** Object:  StoredProcedure [dbo].[RNDMacroEtchResults_Insert]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE
- [dbo].[RNDMacroEtchResults_Insert]
- (         @SelectedTests varchar(max),
-		   @MaxRexGrainDepth char(50) = null,         
-           @SpeciComment char(50) = null,
-           @Operator char(20) = null,
-           @TestDate datetime,
-           @TimeHrs char(2) = null,
-           @TimeMns char(2) = null,         
-           @EntryBy char(25),
-           @EntryDate datetime
-)       
-AS
-BEGIN			
-		DECLARE @maxRecID INT	
-
-		IF (@SelectedTests IS NOT NULL)
-		BEGIN
-			DECLARE @x XML 
-			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
-			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo], 
-				MaxRexGrainDepth =@MaxRexGrainDepth,				
-				SpeciComment =@SpeciComment,
-				Operator =@Operator,
-				TestDate =@TestDate,
-				TimeHrs =@TimeHrs,
-				TimeMns =@TimeMns,				
-				EntryBy =@EntryBy,
-				EntryDate =@EntryDate,
-				[Completed] = '1'
-			INTO #tempTestingNo			
-			FROM RNDTesting
-			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			UPDATE  RNDTesting
-				SET Status = '1' 
-				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDMacroEtchResults])
-			BEGIN
-				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDMacroEtchResults])
-			END
-			ELSE
-			BEGIN
-				SET @maxRecID = 0
-			END
-
-			INSERT INTO [dbo].[RNDMacroEtchResults]
-          ([WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[MaxRexGrainDepth]           
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]        
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed])
-			 SELECT 
-            [WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[MaxRexGrainDepth]           
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]        
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed]
-		   FROM #tempTestingNo
-
-		select TestingNo 
-		FROM [dbo].[RNDMacroEtchResults]
-		where RecID > @maxRecID
-		
-		DROP TABLE #tempTestingNo
-	END
-END
-
-GO
-
-/****** Object:  StoredProcedure [dbo].[RNDOpticalMountResults_Insert]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE
- [dbo].[RNDOpticalMountResults_Insert]
- (         @SelectedTests varchar(max),		       
-           @SpeciComment char(50) = null,
-           @Operator char(20) = null,
-           @TestDate datetime,
-           @TimeHrs char(2) = null,
-           @TimeMns char(2) = null,         
-           @EntryBy char(25),
-           @EntryDate datetime
-)       
-AS
-BEGIN			
-		DECLARE @maxRecID INT	
-
-		IF (@SelectedTests IS NOT NULL)
-		BEGIN
-			DECLARE @x XML 
-			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
-			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo],						
-				SpeciComment =@SpeciComment,
-				Operator =@Operator,
-				TestDate =@TestDate,
-				TimeHrs =@TimeHrs,
-				TimeMns =@TimeMns,				
-				EntryBy =@EntryBy,
-				EntryDate =@EntryDate,
-				[Completed] = '1'
-			INTO #tempTestingNo			
-			FROM RNDTesting
-			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			UPDATE  RNDTesting
-				SET Status = '1' 
-				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDOpticalMountResults])
-			BEGIN
-				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDOpticalMountResults])
-			END
-			ELSE
-			BEGIN
-				SET @maxRecID = 0
-			END
-
-			INSERT INTO [dbo].[RNDOpticalMountResults]
-          ([WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]        
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed])
-			 SELECT 
-            [WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]        
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestDate]
-           ,[TimeHrs]
-           ,[TimeMns]        
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed]
-		   FROM #tempTestingNo
-
-		select TestingNo 
-		FROM [dbo].[RNDOpticalMountResults]
-		where RecID > @maxRecID
-		
-		DROP TABLE #tempTestingNo
-	END
-END
-
-
-
-GO
-
-/****** Object:  StoredProcedure [dbo].[RNDSCCResults_Insert]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE
- [dbo].[RNDSCCResults_Insert]
- (          @SelectedTests varchar(max),
-		   @StressKsi char(5) = null,
-           @TimeDays char(2) = null,
-           @TestStatus char(5) = null,
-           @SpeciComment char(50) = null,
-           @Operator char(20) = null,
-           @TestStartDate datetime = null,
-           @TestEndDate datetime = null,
-           @EntryBy char(25),
-           @EntryDate datetime
-)       
-AS
-BEGIN	
-		DECLARE @maxRecID INT	
-
-		IF (@SelectedTests IS NOT NULL)
-		BEGIN
-			DECLARE @x XML 
-			SELECT 	@x = CAST('<A>'+ REPLACE(@SelectedTests,',','</A><A>')+ '</A>' AS XML);		
-			SELECT TestingNo, [WorkStudyID],[LotID],[MillLotNo], StressKsi = @StressKsi,
-			   TimeDays =@TimeDays,
-			   TestStatus =@TestStatus,
-			   SpeciComment =@SpeciComment,
-			   Operator =@Operator,
-			   TestStartDate =@TestStartDate,
-			   TestEndDate =@TestEndDate,
-			   EntryBy =@EntryBy,
-			   EntryDate =@EntryDate,
-			   [Completed] = '1'
-
-			INTO #tempTestingNo			
-			FROM RNDTesting
-			WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-
-			UPDATE  RNDTesting
-				SET Status = '1' 
-				WHERE TestingNo IN (SELECT t.value('.', 'int') AS inVal FROM @x.nodes('/A') AS x(t))
-			
-			IF EXISTS (SELECT COUNT(*) FROM [dbo].[RNDSCCResults])
-			BEGIN
-				SET @maxRecID = (SELECT MAX(RecID) FROM [dbo].[RNDSCCResults])
-			END
-			ELSE
-			BEGIN
-				SET @maxRecID = 0
-			END
-			INSERT INTO [dbo].[RNDSCCResults]
-           ([WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[StressKsi]
-           ,[TimeDays]
-           ,[TestStatus]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestStartDate]
-           ,[TestEndDate]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed])
-			 SELECT 
-            [WorkStudyID]
-           ,[MillLotNo]
-           ,[LotID]
-           ,[TestingNo]
-           ,[StressKsi]
-           ,[TimeDays]
-           ,[TestStatus]
-           ,[SpeciComment]
-           ,[Operator]
-           ,[TestStartDate]
-           ,[TestEndDate]
-           ,[EntryBy]
-           ,[EntryDate]
-           ,[Completed]
-		   FROM #tempTestingNo
-
-		select TestingNo 
-		FROM [dbo].[RNDSCCResults]
-		where RecID > @maxRecID
-		
-		DROP TABLE #tempTestingNo
-	END
-END
-
-GO
-/****** Object:  StoredProcedure [dbo].[RNDStudyType_Update]    Script Date: 4/11/2018 9:59:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE
- [dbo].[RNDStudyType_Update]
-	@RecID [int],
-   @TypeDesc [varchar](30)          
-AS
-BEGIN	
-	UPDATE [dbo].[RNDStudyType]
-	   SET [TypeDesc] = @TypeDesc 
-	 WHERE RecID = @RecID   
-END
-
-GO
-
--- - check 
---RNDTensionReports_Read

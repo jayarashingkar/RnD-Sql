@@ -1170,10 +1170,11 @@ insert into #tempRNDProcessing (LotID)
 		 select * from #tempRNDProcessing
 
 
-		 drop table #tempRNDProcessing	END
+		 drop table #tempRNDProcessing	
 
-
+	END
 GO
+
 /****** Object:  StoredProcedure [dbo].[RNDMaterial_Delete]    Script Date: 4/11/2018 10:01:35 AM ******/
 SET ANSI_NULLS ON
 GO

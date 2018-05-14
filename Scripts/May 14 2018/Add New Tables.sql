@@ -1,47 +1,104 @@
 USE RDB 
 GO
 
+
+--------------------------------RNDLogin--------------------------------
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
 IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'RNDLogin'))
 BEGIN
 	CREATE TABLE [dbo].[RNDLogin](
-		[UserId] [int] IDENTITY(1,1) PRIMARY KEY NOT NULL,
-		[UserName] [nvarchar](100)  NULL,
-		[FirstName] [nvarchar](100)  NULL,
-		[LastName] [nvarchar](100)  NULL,
-		[UserType] [nvarchar](16)  NULL,
+		[UserId] [int] IDENTITY(1,1) NOT NULL,
+		[UserName] [nvarchar](100) NULL,
+		[FirstName] [nvarchar](100) NULL,
+		[LastName] [nvarchar](100) NULL,
+		[UserType] [nvarchar](16) NULL,
 		[PasswordHash] [varbinary](max) NULL,
 		[PasswordSalt] [varbinary](max) NULL,
 		[PermissionLevel] [nvarchar](max) NULL,
 		[IssueDate] [datetime] NULL,
 		[CreatedBy] [int] NULL,
 		[CreatedOn] [datetime] NULL,
-		[StatusCode] [nvarchar](16),
-	)
+		[StatusCode] [nvarchar](16) NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[UserId] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
 END
+GO
+
+SET ANSI_PADDING OFF
+GO
+--------------------------------RNDSecurityTokens--------------------------------
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
 GO
 IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'RNDSecurityTokens'))
 BEGIN
-	CREATE TABLE RNDSecurityTokens
+	
+	CREATE TABLE [dbo].[RNDSecurityTokens](
+		[SecurityTokenId] [int] IDENTITY(1,1) NOT NULL,
+		[UserId] [int] NULL,
+		[Token] [varchar](100) NULL,
+	PRIMARY KEY CLUSTERED 
 	(
-		SecurityTokenId INT IDENTITY(1,1) PRIMARY KEY,
-		UserId INT,
-		Token VARCHAR(100)
-	)
+		[SecurityTokenId] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
 END
+GO
+SET ANSI_PADDING OFF
+GO
+
+
+
+--------------------------------RNDSecurityQuestions--------------------------------
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
 GO
 
 IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'RNDSecurityQuestions'))
 BEGIN
-CREATE TABLE [dbo].[RNDSecurityQuestions](
-	[RNDSecurityQuestionId] [int] IDENTITY(1,1) PRIMARY KEY,
-	[Question] [nvarchar](4000) NULL,
-	[CreatedBy] [int] NULL,
-	[CreatedOn] [datetime] NULL,
-	[LastModifiedBy] [int] NULL,
-	[LastModifiedOn] [datetime] NULL,
-	[StatusCode] [nvarchar](16) NULL,
-)
+	CREATE TABLE [dbo].[RNDSecurityQuestions](
+		[RNDSecurityQuestionId] [int] IDENTITY(1,1) NOT NULL,
+		[Question] [nvarchar](4000) NULL,
+		[CreatedBy] [int] NULL,
+		[CreatedOn] [datetime] NULL,
+		[LastModifiedBy] [int] NULL,
+		[LastModifiedOn] [datetime] NULL,
+		[StatusCode] [nvarchar](16) NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[RNDSecurityQuestionId] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+
 END
+GO
+
+
+
+--------------------------------RNDUserSecurityAnswers--------------------------------
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
 GO
 
 IF (NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'RNDUserSecurityAnswers'))

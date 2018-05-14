@@ -1,0 +1,37 @@
+﻿USE [RDBPROD]
+GO
+/****** Object:  Table [dbo].[Salesord]    Script Date: 5/14/2018 10:42:18 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Salesord](
+	[UACPART] [numeric](8, 0) NULL,
+	[ALLOY] [char](6) NULL,
+	[Temper] [char](6) NULL,
+	[SO_NUM] [char](6) NULL,
+	[SEARCHPART] [char](30) NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+
+/****** Object:  Table [dbo].[WORKORD]    Script Date: 5/14/2018 10:42:18 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[WORKORD](
+	[SO_NUM] [char](6) NOT NULL,
+	[WO_NUM] [char](3) NOT NULL,
+	[WORKORDID] [int] NOT NULL
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
