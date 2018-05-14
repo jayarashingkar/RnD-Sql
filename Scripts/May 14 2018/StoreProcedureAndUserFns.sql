@@ -47,13 +47,6 @@ CREATE PROCEDURE
 AS
 	BEGIN
 ------------------------------------------------------------------------------------------------------------
---DELETE WITHOUT FLAGS
-
-		--INSERT [dbo].[RNDMaterial]
-		--		([WorkStudyID], [SoNum], [MillLotNo], [CustPart], [UACPart], [Alloy], [Temper], [GageThickness], [Location2], [Hole], [PieceNo], [Comment], [EntryDate], [EntryBy])
-		--VALUES(@WorkStudyID, @SoNum, @MillLotNo, @CustPart, @UACPart, @Alloy, @Temper, @GageThickness, @Location2, @Hole, @PieceNo, @Comment, @EntryDate, @EntryBy)		
-
-------------------------------------------------------------------------------------------------------------
 --DELETE FLAGS
 		INSERT [dbo].[RNDMaterial]
 		([WorkStudyID], [SoNum], [MillLotNo], [CustPart], [UACPart], [Alloy], [Temper], [GageThickness], [Location2], [Hole], [PieceNo], [Comment], [EntryDate], [EntryBy], DBCntry, Deleted)
@@ -86,9 +79,7 @@ CREATE PROCEDURE
 				 @UACPart VARCHAR(50) = NULL
 AS
 	BEGIN
-		DECLARE @total INT
-		
-		--SELECT @total = COUNT(*) FROM [dbo].[RNDMaterial]
+		DECLARE @total INT		
 
 		IF OBJECT_ID('tempdb..#TempRNDAssignMaterial') IS NOT NULL
 		BEGIN
@@ -96,26 +87,7 @@ AS
 		END
 
 ------------------------------------------------------------------------------------------------------------
-----DELETE WITHOUT FLAGS
-		--SELECT AM.RecId AS RecId,	AM.WorkStudyID, AM.SoNum, AM.MillLotNo, AM.CustPart, ISNULL(AM.UACPart,0) UACPart, 
-		--AM.Alloy, AM.Temper, AM.GageThickness, AM.Location2, AM.Hole, AM.PieceNo, AM.Comment, 
-		--AM.EntryDate AS EntryDate, AM.DBCntry, AM.EntryBy
-		----, ISNULL(AM.RCS,'') RCS
-		--INTO #TempRNDAssignMaterial
-		--FROM [dbo].[RNDMaterial] AS AM WITH(NOLOCK)
-		--WHERE 1 = 1 AND AM.RecId > 0
-		--AND (@WorkStudyID IS NULL OR AM.WorkStudyID = @WorkStudyID)
-		--AND (@CustPartNo IS NULL OR AM.CustPart LIKE '%' + @CustPartNo + '%')
-		--AND (@MillLotNo IS NULL OR AM.MillLotNo = @MillLotNo )
-		--AND (@AlloyTypes IS NULL OR AM.Alloy = @AlloyTypes)
-		--AND (@TemperTypes IS NULL OR AM.Temper = @TemperTypes)
-		----AND (@UacPartNo IS NULL OR AM.UACPart = @UacPartNo)
-		----AND (@UACPart IS NULL OR AM.UACPart = @UACPart)
-		--AND (@UACPart IS NULL OR convert(varchar(50),UACPart) like '%' + @UACPart + '%' )
-		----ORDER BY RecId DESC
-		----	OFFSET ((@CurrentPage) * @NoOfRecords) ROWS
-		----	FETCH NEXT @NoOfRecords ROWS ONLY
-------------------------------------------------------------------------------------------------------------
+
 ----DELETE FLAGS
 		SELECT AM.RecId AS RecId,	AM.WorkStudyID, AM.SoNum, AM.MillLotNo, AM.CustPart, ISNULL(AM.UACPart,0) UACPart, 
 		AM.Alloy, AM.Temper, AM.GageThickness, AM.Location2, AM.Hole, AM.PieceNo, AM.Comment, 
@@ -161,15 +133,6 @@ CREATE PROCEDURE
 AS
 	BEGIN
 
-------------------------------------------------------------------------------------------------------------
-----DELETE WITHOUT FLAGS
-
---		SELECT @RecId AS RecId,	RTRIM(WorkStudyID) AS WorkStudyID, SoNum, MillLotNo, CustPart, UACPart, 
---		RTRIM(ISNULL(Alloy,'')) AS Alloy , RTRIM(ISNULL(Temper,'')) AS Temper, GageThickness, Location2, Hole, PieceNo, Comment, 
---		EntryDate AS EntryDate, DBCntry,EntryBy
---		--, ISNULL(RCS,'') AS RCS	
---		FROM [dbo].[RNDMaterial]
---		WHERE RecId = @RecId
 ------------------------------------------------------------------------------------------------------------
 --DELETE FLAGS
 		SELECT @RecId AS RecId,	RTRIM(WorkStudyID) AS WorkStudyID, SoNum, MillLotNo, CustPart, UACPart, 
@@ -411,7 +374,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
---RNDCompressionReports_Read
+
 CREATE  PROCEDURE 
 [dbo].[RNDCompressionReports_Read] 
 	@CurrentPage INT, @NoOfRecords INT,@WorkStudyID VARCHAR(50) = NULL,@TestType VARCHAR(35),
@@ -419,7 +382,6 @@ CREATE  PROCEDURE
 AS
 	BEGIN
 		DECLARE @total INT
-		--SELECT @total = COUNT(*) FROM [dbo].[RNDWorkStudy]
 
 		IF OBJECT_ID('tempdb..#TempCompressionReports') IS NOT NULL
 		BEGIN
@@ -1837,20 +1799,7 @@ CREATE PROCEDURE
 	--@WorkStudyID 
 AS
 BEGIN
-	
------------------------------------------------------------------------------------------------------------
---DELETE WITHOUT FLAGS
 
- --   INSERT [dbo].[RNDMaterialDeleted]
-	--		( [RecID], [WorkStudyID], [SoNum], [MillLotNo], [CustPart], [UACPart], [Alloy], [Temper], [GageThickness], [Location2],
-	--		[Hole], [PieceNo], [Comment], [EntryDate], [EntryBy], [DBCntry] )
-	
-	--SELECT [RecID], [WorkStudyID], [SoNum], [MillLotNo], [CustPart], [UACPart], [Alloy], [Temper], [GageThickness], [Location2],
-	--[Hole], [PieceNo], [Comment], [EntryDate], [EntryBy], [DBCntry]
-	--FROM RNDMaterial WITH(NOLOCK)
-	--WHERE RecID = @RecId
-
-	--DELETE [dbo].[RNDMaterial] WHERE ([RecId] = @RecId)
 ------------------------------------------------------------------------------------------------------------
 --DELETE FLAGS
 		UPDATE [dbo].[RNDMaterial]
@@ -2096,7 +2045,6 @@ CREATE PROCEDURE
 AS
 	BEGIN
 		DECLARE @total INT
-		--SELECT @total = COUNT(*) FROM [dbo].[RNDWorkStudy]
 
 		IF OBJECT_ID('tempdb..#TempOpticalMountReports') IS NOT NULL
 		BEGIN
@@ -2316,14 +2264,6 @@ BEGIN
 		WHERE ((Deleted != 1 )or(Deleted is null))
 		AND WorkStudyID = @WorkStudyID
 ------------------------------------------------------------------------------------------------------------
---DELETE WITHOUT FLAGS
-	--	SET @total = (SELECT COUNT(*) FROM [dbo].[RNDTesting] )
-		
-		--SELECT @total as total, TestingNo, Alloy, GageThickness, Hole,Location1, Location2, Location3, LotID,
-		--Orientation, PieceNo, SpeciComment, TestType, SubTestType, Temper, TestLab, UACPart, WorkStudyID
-		--FROM [dbo].[RNDTesting]
-
-------------------------------------------------------------------------------------------------------------
 	 	
 	END
 END;
@@ -2416,26 +2356,6 @@ BEGIN
 		set @Sonum =  (select top 1 [SoNum] from [dbo].[RNDMaterial] where [MillLotNo] = @MillLotNo)
 
 ------------------------------------------------------------------------------------------------------------
---DELETE WITHOUT FLAGS
-		 
-	--INSERT [dbo].[RNDProcessing]
-	--( WorkStudyID, MillLotNo, Sonum, ProcessNo,
-	-- ProcessID,
-	--HTLogNo,  AgeLotNo,  Hole, PieceNo,
-	--SHTTemp, SHSoakHrs, SHSoakMns, SHTStartHrs, SHTStartMns, SHTDate, StretchPct, AfterSHTHrs, AfterSHTMns, NatAgingHrs,
-	--NatAgingMns, ArtStartHrs, ArtStartMns, ArtAgeDate, ArtAgeTemp1, ArtAgeHrs1, ArtAgeMns1, ArtAgeTemp2, ArtAgeHrs2,
-	--ArtAgeMns2, ArtAgeTemp3, ArtAgeHrs3, ArtAgeMns3, FinalTemper, TargetCount, ActualCount
-	--)
-	--VALUES( @WorkStudyID, @MillLotNo, @Sonum, @ProcessNo, 
-	--@ProcessID, 
-	--@HTLogNo,  @AgeLotNo, @Hole, @PieceNo,
-	--@SHTTemp, @SHSoakHrs, @SHSoakMns, @SHTStartHrs, @SHTStartMns, @SHTDate, @StretchPct, @AfterSHTHrs, @AfterSHTMns, @NatAgingHrs,
-	--@NatAgingMns, @ArtStartHrs, @ArtStartMns, @ArtAgeDate, @ArtAgeTemp1, @ArtAgeHrs1, @ArtAgeMns1, @ArtAgeTemp2, @ArtAgeHrs2,
-	--@ArtAgeMns2, @ArtAgeTemp3, @ArtAgeHrs3, @ArtAgeMns3, @FinalTemper, @TargetCount, @ActualCount
-	--)
-
-	
-------------------------------------------------------------------------------------------------------------
 --DELETE WITH FLAGS
 
 	INSERT [dbo].[RNDProcessing]
@@ -2483,8 +2403,6 @@ CREATE PROCEDURE
 AS
 	BEGIN
 		DECLARE @total INT
-		--SELECT @total = COUNT(*) FROM [dbo].[RNDProcessing]
-
 		IF OBJECT_ID('tempdb..#TempRNDProcessingMaterial') IS NOT NULL
 		BEGIN
 			DROP TABLE #TempRNDProcessingMaterial
@@ -2694,7 +2612,6 @@ AS
 		END
 
 		DECLARE @total INT
-		--SELECT @total = COUNT(*) FROM [dbo].[RNDLogin] WITH(NOLOCK)		
 		declare @CreatedBy nvarchar(100)
 		set @CreatedBy = (select UserName FROM [dbo].[RNDLogin] WITH(NOLOCK)
 						 where CreatedBy = UserId)
@@ -2704,16 +2621,12 @@ AS
 		INTO #TempRNDLogin
 		FROM [dbo].[RNDLogin] WITH(NOLOCK)
 		WHERE 1 = 1 AND UserId > 0 
-		--AND StatusCode != 'D' AND PermissionLevel != 'SuperAdmin'
 		AND (@UserId IS NULL OR UserId = @UserId)
 		AND (@UserName IS NULL OR UserName LIKE '%' + @UserName + '%')
 		AND (@FirstName IS NULL OR FirstName LIKE '%' + @FirstName + '%')
 		AND (@LastName IS NULL OR LastName LIKE '%' + @LastName + '%')
 		--AND (@PermissionLevel IS NULL OR PermissionLevel LIKE '%' + @PermissionLevel + '%')	
 		AND (@PermissionLevel IS NULL OR upper(rtrim(PermissionLevel)) = upper(rtrim(@PermissionLevel)))
-		--ORDER BY UserId DESC
-		--	OFFSET ((@CurrentPage) * @NoOfRecords) ROWS
-		--	FETCH NEXT @NoOfRecords ROWS ONLY
 
 		SELECT @total = COUNT(*) FROM #TempRNDLogin WITH(NOLOCK)
 
@@ -2796,10 +2709,6 @@ AS
 		AND (@WorkStudyID IS NULL OR WorkStudyID LIKE '%' + @WorkStudyID + '%')				
 		AND EntryDate between  @searchFromDate and @searchToDate
 		
-		--ORDER BY RecId DESC
-		--	OFFSET ((@CurrentPage)*@NoOfRecords) ROWS
-		--	FETCH NEXT @NoOfRecords ROWS ONLY
-
 		SELECT @total = COUNT(*) FROM #TempRNDReports WITH(NOLOCK)
 
 		SELECT @total AS [total], 
@@ -3404,23 +3313,6 @@ CREATE PROCEDURE [dbo].[RNDTesting_Delete]
 AS
 BEGIN
 ------------------------------------------------------------------------------------------------------------
-----DELETE WITHOUT FLAGS
---    INSERT [dbo].[RNDTestingDeleted]
---			(  [TestingNo], [WorkStudyID], [LotID], [MillLotNo], [SoNum], [Hole], [PieceNo], [Alloy], [Temper], 
---		   [CustPart], [UACPart], [GageThickness], [Orientation], [Location1], [Location2], [Location3], [TestType], 
---		   [SubTestType], [Status], [Selected], [EntryDate], [EntryBy], [TestLab], [Printed], [Replica]	 )
-	
---	SELECT 
---		   [TestingNo], [WorkStudyID], [LotID], [MillLotNo], [SoNum], [Hole], [PieceNo], [Alloy], [Temper], 
---		   [CustPart], [UACPart], [GageThickness], [Orientation], [Location1], [Location2], [Location3], [TestType], 
---		   [SubTestType], [Status], [Selected], [EntryDate], [EntryBy], [TestLab], [Printed], [Replica]	
---	FROM RNDTesting WITH(NOLOCK)
---	--WHERE WorkStudyID = @WorkStudyID
---	WHERE TestingNo = @TestingNo
-
---	DELETE [dbo].RNDTesting WHERE ([TestingNo] = @TestingNo)
-
-------------------------------------------------------------------------------------------------------------
 --DELETE WITH FLAGS
 	UPDATE RNDTesting SET Deleted = 1 WHERE ([TestingNo] = @TestingNo)
 	
@@ -3543,7 +3435,6 @@ CREATE PROCEDURE
 AS
 	BEGIN
 		DECLARE @total INT
-		
 
 		--DECLARE @Temp TABLE (TestType varchar(35))
 		--INSERT INTO @Temp SELECT TestType FROM  [dbo].[fnSplitValues](@TestType,';')
@@ -3864,23 +3755,6 @@ AS
 			--and @UACPart=UACPart
 	--		SELECT @GageThickness=GageThickness,@Location2=Location2 FROM RNDMaterial WHERE RecID = @SelectCol1
 
-
-------------------------------------------------------------------------------------------------------------
---DELETE WITHOUT FLAGS
-			--INSERT INTO RNDMaterial(WorkStudyID,MillLotNo,CustPart,GageThickness,Location2,EntryBy,EntryDate,
-			--						SoNum, 
-			--						UACPart,
-			--						Alloy, 
-			--						Temper, 
-			--						Hole, PieceNo, Comment)
-			--				VALUES(@WorkStudyID,@MillLotNo,@CustPart,@GageThickness,@Location2,@EntryBy,GETDATE(),
-			--						@SoNum,
-			--						@UACPart,
-			--						 @Alloy, 
-			--						 @Temper, 
-			--						 @Hole, @PieceNo, @Comment)
-
-
 ------------------------------------------------------------------------------------------------------------
 --DELETE FLAGS
 						INSERT INTO RNDMaterial(WorkStudyID,MillLotNo,CustPart,GageThickness,Location2,EntryBy,EntryDate,
@@ -4043,25 +3917,7 @@ CREATE PROCEDURE
     @RecId [int]
 AS
 BEGIN
-
-------------------------------------------------------------------------------------------------------------
-----DELETE WITHOUT FLAGS
---	DECLARE @WorkStudyID char(10)
-
---	SELECT @WorkStudyID =  [WorkStudyID] FROM [dbo].[RNDWorkStudy] WITH(NOLOCK)
---	WHERE [RecId] = @RecId
-	
---	INSERT [dbo].[RNDWorkStudyDeleted]([RecId], [WorkStudyID], [StudyType], [StudyDesc], [PlanOSCost], [AcctOSCost], [StudyStatus],
---	[StartDate], [DueDate], [CompleteDate], [Plant], [EntryBy], [EntryDate],[TempID], [Experimentation] , [FinalSummary], [Uncertainty])
---    SELECT [RecId], [WorkStudyID], [StudyType], [StudyDesc], [PlanOSCost], [AcctOSCost], [StudyStatus], [StartDate], [DueDate],
---	[CompleteDate], [Plant], [EntryBy], [EntryDate],[TempID],[Experimentation] , [FinalSummary] , [Uncertainty]
---	FROM [dbo].[RNDWorkStudy] WITH(NOLOCK)
---	WHERE [RecId] = @RecId
-
---	DELETE FROM [dbo].[RNDWorkStudy] WHERE ([RecId] = @RecId)
-	
-------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 --DELETE FLAGS
 	UPDATE [RNDWorkStudy] SET Deleted = 1 where ([RecId] = @RecId)
 	
@@ -4098,13 +3954,7 @@ CREATE PROCEDURE
 	@Uncertainty [nvarchar](1000) = NULL
 AS
 BEGIN
-	------------------------------------------------------------------------------------------------------------
-----DELETE WITHOUT FLAGS
---    INSERT [dbo].[RNDWorkStudy]([WorkStudyID], [StudyType], [StudyDesc], [PlanOSCost], [AcctOSCost], [StudyStatus], [StartDate], [DueDate], [CompleteDate], [Plant], [EntryBy], [EntryDate],[TempID],[Experimentation], [FinalSummary],[Uncertainty])
---    VALUES (@WorkStudyID, @StudyType, @StudyDesc, @PlanOSCost, @AcctOSCost, @StudyStatus, @StartDate, @DueDate, @CompleteDate, @Plant,  @EntryBy, @EntryDate, @TempID, @Experimentation, @FinalSummary,@Uncertainty)
-   	
-------------------------------------------------------------------------------------------------------------
-    
+
 	------------------------------------------------------------------------------------------------------------
 --DELETE FLAGS
   INSERT [dbo].[RNDWorkStudy]([WorkStudyID], [StudyType], [StudyDesc], [PlanOSCost], [AcctOSCost], [StudyStatus], [StartDate], [DueDate], [CompleteDate], [Plant], [EntryBy], [EntryDate],[TempID],[Experimentation], [FinalSummary],[Uncertainty], Deleted)
@@ -4132,7 +3982,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
- --exec RNDWorkStudy_Read 0,20
   
 CREATE PROCEDURE 
 [dbo].[RNDWorkStudy_Read] 
@@ -4143,36 +3992,11 @@ CREATE PROCEDURE
 AS
 	BEGIN
 		DECLARE @total INT
-		--SELECT @total = COUNT(*) FROM [dbo].[RNDWorkStudy]
 
 		IF OBJECT_ID('tempdb..#TempRNDWorkStudy') IS NOT NULL
 		BEGIN
 			DROP TABLE #TempRNDWorkStudy
 		END
-
-------------------------------------------------------------------------------------------------------------
-----DELETE WITHOUT FLAGS
-
---		SELECT RecId AS RecId,RTRIM(WorkStudyID) AS WorkStudyID,
---		StudyType, [dbo].[GetSelectValue]('RNDStudyType',NULL,StudyType) AS StudyTypeDesc,
---		RTRIM(StudyDesc) AS StudyDesc,PlanOSCost,AcctOSCost,
---		StudyStatus, [dbo].[GetSelectValue]('RNDStudyStatus',NULL,StudyStatus) AS StudyStatusDesc,
---		CONVERT(VARCHAR,StartDate,101) AS StartDate,CONVERT(VARCHAR,DueDate,101) AS DueDate,
---		CONVERT(VARCHAR,CompleteDate,101) AS CompleteDate,
---		Plant,[dbo].[GetSelectValue]('RNDLocation',NULL,Plant) AS PlantDesc,
---		TempID,EntryBy,EntryDate,
---		[dbo].GetStudyScope(WorkStudyID) AS StudyScope
---		, Experimentation, FinalSummary, Uncertainty
---		INTO #TempRNDWorkStudy
---		FROM [RNDWorkStudy]
---		WHERE 1=1
---		AND (@WorkStudyID IS NULL OR WorkStudyID LIKE '%' + @WorkStudyID + '%')
---		AND (@StudyType IS NULL OR StudyType = @StudyType)
---		AND (@Plant IS NULL OR Plant = @Plant)
---		AND (@StudyStatus IS NULL OR StudyStatus = @StudyStatus)
---		AND (@searchFromDate IS NULL OR CONVERT(VARCHAR(10),StartDate,120) = @searchFromDate)
---		AND (@searchToDate IS NULL OR CONVERT(VARCHAR(10),DueDate,120) = @searchToDate)
-
 ------------------------------------------------------------------------------------------------------------
 --DELETE FLAGS
  		SELECT A.RecId AS RecId,
